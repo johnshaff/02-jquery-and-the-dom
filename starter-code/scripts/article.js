@@ -1,47 +1,54 @@
 var articles = [];
 
 function Article (opts) {
-  //TODO: Use the JS object that we pass in to complete the constructor.
-  //Save all the properties of the 'opts' into 'this'
+  // TODO: Use the js object passed in to complete this constructor function:
+  // Save ALL the properties of `opts` into '`this`.
   this.title = opts.title;
   this.category = opts.category;
   this.author = opts.author;
   this.authorUrl = opts.authorUrl;
   this.publishedOn = opts.publishedOn;
   this.body = opts.body;
-
 };
 
-
-Article.prototype.toHtml = function () {
+Article.prototype.toHtml = function() {
   var $newArticle = $('article.template').clone();
   $newArticle.attr('data-category', this.category);
-  $newArticle.h1.text(this.title);
 
-  //TODO: fill in the rest of the attributes
+  /* TODO: Now use jQuery to fill in the rest of the current template clone
+  with properties from this particular Article instance.
+  We need to fill in:
+  1. author name,
+  2. author url,
+  3. article title,
+  4. article body, and
+  5. publication date. */
 
-  //Display the date as a relative number of days ago
+  $newArticle.find('a').text(this.author);
+  $newArticle.find('a').attr('href', this.authorUrl);
+  $newArticle.find('time').attr('datetime', this.publishedOn);
+
+
+  // Display the date as a relative number of 'days ago'.
   $newArticle.find('time[pubdate]').attr('title', this.publishedOn);
   $newArticle.find('time').html('about ' + parseInt((new Date() - new Date(this.publishedOn))/60/60/24/1000) + ' days ago');
 
-  //TODO: This cloned article is no longer a template, as it now has real data attached to it. We need to account for that before this current article gets rendered to our dom. Just remove the class from the new article.
-
+  /*TODO: This cloned article is no longer a template,
+  as it now has real data attached to it! We need to account
+  for that before this current article gets rendered to our
+  DOM. */
+  $newArticle.removeClass();
   return $newArticle;
 };
 
-
-//This is sorting the current data array
-ourLocalData.sort(function (firstElement, secondElement) {
+ourLocalData.sort(function(firstElement, secondElement) {
   return (new Date(secondElement.publishedOn)) - (new Date(firstElement.publishedOn));
 });
 
-//This is instantiating and then pushing each instance into a new a different array
-ourLocalData.forEach(function (opts) {
-  articles.push(new Article (opts));
-};
+ourLocalData.forEach(function(theCurrentArticleObject) {
+  articles.push(new Article(theCurrentArticleObject));
+});
 
-
-//this is taking each object in the new array running the toHtml method on it and then putting it on the DOM
-articles.forEach(function (article) {
+articles.forEach(function(article) {
   $('#articles').append(article.toHtml());
-)};
+});
